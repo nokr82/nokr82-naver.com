@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "453685081318",
+    "firebase_url": "https://playkok-89b20.firebaseio.com",
+    "project_id": "playkok-89b20",
+    "storage_bucket": "playkok-89b20.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:453685081318:android:db222ce43a8f93ed7b3727",
+        "android_client_info": {
+          "package_name": "com.neung.playkok"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "453685081318-jatbleldgpm32lilesd7vp1a33bnti4q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEYt51QfQ598Ffq_MKmhH4-MqOvT0WGH8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "453685081318-jatbleldgpm32lilesd7vp1a33bnti4q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
