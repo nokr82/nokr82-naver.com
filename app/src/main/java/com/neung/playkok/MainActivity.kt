@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : RootActivity() {
-    private val url = "https://www.play-kok.com?token="
+    private val url = "http://play-kok.com?token="
 
     /*internal var pushReceiver: BroadcastReceiver? = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
@@ -114,6 +114,7 @@ class MainActivity : RootActivity() {
         settings.setGeolocationEnabled(true)
         settings.allowUniversalAccessFromFileURLs = true
         settings.allowFileAccess = true
+        settings.mediaPlaybackRequiresUserGesture = false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // https 이미지.
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
