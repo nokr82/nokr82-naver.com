@@ -62,6 +62,7 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
              */
             System.out.println("----- title : " + remoteMessage.getNotification().getTitle());
             System.out.println("----- body : " + remoteMessage.getNotification().getBody());
+            System.out.println("----- 링크 : " + remoteMessage.getData().get("url"));
             title = remoteMessage.getNotification().getTitle();
             body = remoteMessage.getNotification().getBody();
             url = remoteMessage.getData().get("url");
