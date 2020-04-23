@@ -49,8 +49,8 @@ class MainActivity : RootActivity() {
 //        val filter1 = IntentFilter("PUSH");
 //        registerReceiver(pushReceiver, filter1);
 
-        System.out.println("location : " + url+getTokenId(this));
-        System.out.println("무꼬!!!!!!!!!!!!!!!!!!!!!!: " + getTokenId(this));
+//        System.out.println("location : " + url+getTokenId(this));
+//        System.out.println("무꼬!!!!!!!!!!!!!!!!!!!!!!: " + getTokenId(this));
         // Get the web view settings instance
         val settings = webView.settings
 
@@ -61,8 +61,8 @@ class MainActivity : RootActivity() {
         var intent = getIntent();
         if (intent.getStringExtra("url") != null && !intent.getStringExtra("url").equals("")) {
             //푸쉬클릭이벤트
-            println("------푸쉬 클릭했습니다")
-            println("------푸쉬"+intent.getStringExtra("url"))
+//            println("------푸쉬 클릭했습니다")
+//            println("------푸쉬"+intent.getStringExtra("url"))
             webView.loadUrl(intent.getStringExtra("url"))
         }else {
             webView.loadUrl(url+getTokenId(this))
@@ -79,7 +79,7 @@ class MainActivity : RootActivity() {
         // Enable zooming in web view
         settings.setSupportZoom(true)
         settings.builtInZoomControls = true
-        settings.displayZoomControls = true
+        settings.displayZoomControls = false
 
 
         // Zoom web view text
