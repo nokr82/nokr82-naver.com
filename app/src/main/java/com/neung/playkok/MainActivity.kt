@@ -5,6 +5,8 @@ import android.app.Dialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -140,10 +142,20 @@ class MainActivity : RootActivity() {
     }
 
 
+
+
+
     private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
     private val FILECHOOSER_RESULTCODE = 1
 
     internal inner class MyWebChromeClient : WebChromeClient() {
+        override fun getDefaultVideoPoster(): Bitmap? {
+            val bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565)
+            val canvas = Canvas(bitmap)
+            // Use whatever color you want here. You could probably use a transparent color
+            canvas.drawARGB(255, 0, 0, 0)
+            return bitmap
+        }
 
         override fun onShowFileChooser(
             webView: WebView,
