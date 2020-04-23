@@ -2,7 +2,6 @@ package com.neung.playkok;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -15,21 +14,14 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
-import android.provider.MediaStore;
 import android.util.Log;
-
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
-
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-
 import java.util.List;
 import java.util.Map;
 
-import kotlin.reflect.KVariance;
-
-import static android.content.ContentValues.TAG;
 
 
 public class FirebaseInstanceIDService extends FirebaseMessagingService {
@@ -57,37 +49,42 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
 
         String title = "";
         String body = "";
-        String message = "";
         String url = "";
+        String alram = "";
 
 
-        if (remoteMessage.getNotification() != null) {
-            /*
-             * GCM 방식
-             * firebase console 테스트 메시지 받는 방법
-             */
-            System.out.println("----- title : " + remoteMessage.getNotification().getTitle());
-            System.out.println("----- body : " + remoteMessage.getNotification().getBody());
-            System.out.println("----- 링크 : " + remoteMessage.getData().get("url"));
-
-
-            title = remoteMessage.getNotification().getTitle();
-            body = remoteMessage.getNotification().getBody();
-            url = remoteMessage.getData().get("url");
-
-
-            sendNotification(title,body,url);
-        }
-
-
-//        if (remoteMessage.getData().size() > 0) {
-//            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-//           /* title = remoteMessage.getData().get("title");
-//            message = remoteMessage.getData().get("message");
+//        if (remoteMessage.getNotification() != null) {
+//            /*
+//             * GCM 방식
+//             * firebase console 테스트 메시지 받는 방법
+//             */
+//            System.out.println("----- title : " + remoteMessage.getNotification().getTitle());
+//            System.out.println("----- body : " + remoteMessage.getNotification().getBody());
+//            System.out.println("----- 링크 : " + remoteMessage.getData().get("url"));
+//
+//
+//            title = remoteMessage.getNotification().getTitle();
+//            body = remoteMessage.getNotification().getBody();
 //            url = remoteMessage.getData().get("url");
-//            System.out.println("----- title : " + title);
-//            System.out.println("----- url : " + url);*/
+//
+//
+//            sendNotification(title,body,url);
 //        }
+
+
+        if (remoteMessage.getData().size() > 0) {
+            System.out.println("Message data payload: " + remoteMessage.getData());
+            title = remoteMessage.getData().get("title");
+            body = remoteMessage.getData().get("body");
+            url = remoteMessage.getData().get("url");
+            alram = remoteMessage.getData().get("alram");
+            System.out.println("----- title : " + title);
+            System.out.println("----- body : " + body);
+            System.out.println("----- url : " + url);
+            System.out.println("----- alram : " + alram);
+
+            sendNotification(title,body,url,alram);
+        }
 
     }
 
@@ -95,14 +92,13 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
      * remoteMessage 메세지 안애 getData와 getNotification이 있습니다.
      * 이부분은 차후 테스트 날릴때 설명 드리겠습니다.
      * **/
-    private void sendNotification(String title,String message,String url) {
+    private void sendNotification(String title,String message,String url,String alram) {
 
         /*
          * FCM 방식
          * PHP 연동 및 일반 테스트 메시지 받는 방법
          */
 
-        System.out.println("놉444444 ");
 
         Intent intent = new Intent();
         //중복 앱 실행 막기
@@ -140,7 +136,7 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
                         .setAutoCancel(true)
 //                        .setSound(soundUri)
                         .setContentIntent(pendingIntent);
-        playNotificationSound();
+        playNotificationSound(alram);
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -165,11 +161,11 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
 
     }
 
-    public void playNotificationSound()
+    public void playNotificationSound(String alram)
     {
         try
         {
-            Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/raw/alram45");
+            Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/raw/"+alram);
             Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), alarmSound);
             r.play();
             System.out.println("놉444444 " + alarmSound);
