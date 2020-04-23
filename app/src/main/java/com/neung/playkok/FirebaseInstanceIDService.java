@@ -7,12 +7,15 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
@@ -23,6 +26,8 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.List;
 import java.util.Map;
+
+import kotlin.reflect.KVariance;
 
 import static android.content.ContentValues.TAG;
 
@@ -55,6 +60,7 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
         String message = "";
         String url = "";
 
+
         if (remoteMessage.getNotification() != null) {
             /*
              * GCM 방식
@@ -63,9 +69,12 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
             System.out.println("----- title : " + remoteMessage.getNotification().getTitle());
             System.out.println("----- body : " + remoteMessage.getNotification().getBody());
             System.out.println("----- 링크 : " + remoteMessage.getData().get("url"));
+
+
             title = remoteMessage.getNotification().getTitle();
             body = remoteMessage.getNotification().getBody();
             url = remoteMessage.getData().get("url");
+
 
             sendNotification(title,body,url);
         }
@@ -92,6 +101,9 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
          * FCM 방식
          * PHP 연동 및 일반 테스트 메시지 받는 방법
          */
+
+        System.out.println("놉444444 ");
+
         Intent intent = new Intent();
         //중복 앱 실행 막기
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -115,7 +127,9 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
          * currentTime 으로 하면 푸쉬가 쌓임
          */
         PendingIntent pendingIntent = PendingIntent.getActivity(this,(int)System.currentTimeMillis()/1000,intent,PendingIntent.FLAG_ONE_SHOT);
-        Uri soundUri = Uri.parse("android.resuource://" + getPackageName() + "/" + R.raw.alram45);
+//        Uri soundUri = Uri.parse("android.resuource://" + getPackageName() + "/" + R.raw.alram45);
+//        System.out.println("놉444444 " + soundUri);
+//        System.out.println("놉3333 " + getPackageName());
         // 푸쉬 세팅 (푸쉬 제목, 내용, 아이콘, 사운드)
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
@@ -124,9 +138,9 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
                         .setContentTitle(title)
                         .setContentText(message)
                         .setAutoCancel(true)
-                        .setSound(soundUri)
+//                        .setSound(soundUri)
                         .setContentIntent(pendingIntent);
-
+        playNotificationSound();
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -142,14 +156,28 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
             @SuppressLint("InvalidWakeLockTag") PowerManager.WakeLock wakeLock = powerManager.newWakeLock(
                     PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE | PowerManager.ACQUIRE_CAUSES_WAKEUP,
                     "extrade2");
-
+            System.out.println("2424242 " );
             wakeLock.acquire(3000);
             notificationManager.notify((int)(System.currentTimeMillis()/1000), notificationBuilder.build());
         }
-
         //푸쉬 보내기
         notificationManager.notify((int)(System.currentTimeMillis()/1000), notificationBuilder.build());
 
+    }
+
+    public void playNotificationSound()
+    {
+        try
+        {
+            Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/raw/alram45");
+            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), alarmSound);
+            r.play();
+            System.out.println("놉444444 " + alarmSound);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public static boolean isScreenOn(Context context) {

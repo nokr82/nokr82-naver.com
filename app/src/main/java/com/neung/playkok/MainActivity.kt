@@ -270,7 +270,7 @@ class MainActivity : RootActivity() {
                 }
                 // Get new Instance ID token
                 PrefUtils.setPreference(context, "token", task.result!!.token)
-                System.out.println("놉444444 " + task.result!!.token);
+//                System.out.println("놉444444 " + task.result!!.token);
             })
         var token = PrefUtils.getStringPreference(context, "token")
         return token
