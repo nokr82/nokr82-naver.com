@@ -73,15 +73,11 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
 
 
         if (remoteMessage.getData().size() > 0) {
-            System.out.println("Message data payload: " + remoteMessage.getData());
+//            System.out.println("Message data payload: " + remoteMessage.getData());
             title = remoteMessage.getData().get("title");
             body = remoteMessage.getData().get("body");
             url = remoteMessage.getData().get("url");
             alram = remoteMessage.getData().get("alram");
-            System.out.println("----- title : " + title);
-            System.out.println("----- body : " + body);
-            System.out.println("----- url : " + url);
-            System.out.println("----- alram : " + alram);
 
             sendNotification(title,body,url,alram);
         }
@@ -151,8 +147,7 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
             PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
             @SuppressLint("InvalidWakeLockTag") PowerManager.WakeLock wakeLock = powerManager.newWakeLock(
                     PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE | PowerManager.ACQUIRE_CAUSES_WAKEUP,
-                    "extrade2");
-            System.out.println("2424242 " );
+                    "playkok");
             wakeLock.acquire(3000);
             notificationManager.notify((int)(System.currentTimeMillis()/1000), notificationBuilder.build());
         }
@@ -168,7 +163,6 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
             Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/raw/"+alram);
             Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), alarmSound);
             r.play();
-            System.out.println("놉444444 " + alarmSound);
         }
         catch (Exception e)
         {
