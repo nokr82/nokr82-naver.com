@@ -28,43 +28,23 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : RootActivity() {
     private val url = "http://play-kok.com?token="
 
-    /*internal var pushReceiver: BroadcastReceiver? = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent?) {
-            if (intent != null) {
-                *//*
-                    앱이 실행되고 있을 시 broadcast 활성화
-                    url : 해당 페이지로 이동
-                 *//*
-                var url = intent.getStringExtra("url");
-//                webView.loadUrl(url)
-                webView.loadUrl("https://www.naver.com")
-            }
-        }
-    }*/
+
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        //브로드캐스트 활성화
-//        val filter1 = IntentFilter("PUSH");
-//        registerReceiver(pushReceiver, filter1);
-
-//        System.out.println("location : " + url+getTokenId(this));
-//        System.out.println("무꼬!!!!!!!!!!!!!!!!!!!!!!: " + getTokenId(this));
-        // Get the web view settings instance
         val settings = webView.settings
 
 
         var intent = getIntent();
         if (intent.getStringExtra("url") != null && !intent.getStringExtra("url").equals("")) {
             //푸쉬클릭이벤트
-            println("------푸쉬 클릭했습니다")
+
             webView.loadUrl(intent.getStringExtra("url"))
         }else {
             webView.loadUrl(url+getTokenId(this))
-            println("------푸쉬"+url+getTokenId(this)+"&mobile=A")
         }
         // Enable java script in web view
         settings.javaScriptEnabled = true
