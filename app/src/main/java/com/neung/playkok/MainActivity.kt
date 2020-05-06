@@ -57,17 +57,14 @@ class MainActivity : RootActivity() {
         val settings = webView.settings
 
 
-        webView.loadUrl(url+getTokenId(this)+"&mobile=A")
-        println("------푸쉬"+url+getTokenId(this)+"&mobile=A")
-
         var intent = getIntent();
         if (intent.getStringExtra("url") != null && !intent.getStringExtra("url").equals("")) {
             //푸쉬클릭이벤트
-//            println("------푸쉬 클릭했습니다")
-
+            println("------푸쉬 클릭했습니다")
             webView.loadUrl(intent.getStringExtra("url"))
         }else {
             webView.loadUrl(url+getTokenId(this))
+            println("------푸쉬"+url+getTokenId(this)+"&mobile=A")
         }
         // Enable java script in web view
         settings.javaScriptEnabled = true
