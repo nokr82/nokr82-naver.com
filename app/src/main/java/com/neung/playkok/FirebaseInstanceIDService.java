@@ -112,7 +112,7 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
 
         //채널 id 세팅 android 9.0 이상 푸쉬 안옴
         String channelId = getString(R.string.default_notification_channel_id);
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         /*
          *  모든 (int)System.currentTimeMillis()/1000 는 푸쉬가 곂치기 않기 위해 설정
@@ -130,7 +130,7 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
                         .setContentTitle(title)
                         .setContentText(message)
                         .setAutoCancel(true)
-//                        .setSound(soundUri)
+                        .setSound(null)
                         .setContentIntent(pendingIntent);
         playNotificationSound(alram);
         NotificationManager notificationManager =
