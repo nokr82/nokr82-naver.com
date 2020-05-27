@@ -39,6 +39,9 @@ class MainActivity : RootActivity() {
 
 
         var intent = getIntent();
+
+        webView.clearCache(true)
+        webView.clearHistory()
         if (intent.getStringExtra("url") != null && !intent.getStringExtra("url").equals("")) {
             //푸쉬클릭이벤트
 
