@@ -130,8 +130,9 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
                         .setContentTitle(title)
                         .setContentText(message)
                         .setAutoCancel(true)
-                        .setSound(null)
                         .setContentIntent(pendingIntent);
+
+
         playNotificationSound(alram);
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -139,8 +140,14 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channel_nm = getString(R.string.default_notification_channel_name);
             NotificationChannel channel = new NotificationChannel(channelId,channel_nm,NotificationManager.IMPORTANCE_HIGH);
+            channel.setSound(null,null);
+            channel.enableVibration(true);
+            channel.setVibrationPattern(new long[] { 500,50,500,50 });
             notificationManager.createNotificationChannel(channel);
         }
+
+
+
 
         //화면 깨우기
         if (!isScreenOn(this)) {
