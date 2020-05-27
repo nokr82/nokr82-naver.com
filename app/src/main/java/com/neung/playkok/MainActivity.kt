@@ -44,7 +44,6 @@ class MainActivity : RootActivity() {
         webView.clearHistory()
         if (intent.getStringExtra("url") != null && !intent.getStringExtra("url").equals("")) {
             //푸쉬클릭이벤트
-
             webView.loadUrl(intent.getStringExtra("url"))
         }else {
             webView.loadUrl(url+getTokenId(this))
