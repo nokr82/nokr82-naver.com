@@ -1,10 +1,9 @@
 package com.neung.playkok
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.ContentValues
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.net.Uri
@@ -17,6 +16,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.webkit.*
 import android.webkit.WebView.WebViewTransport
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
@@ -28,12 +28,29 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : RootActivity() {
     private val url = "http://play-kok.com?token="
 
+/*
+internal var pushReceiver: BroadcastReceiver? = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent?) {
+            if (intent != null) {
+//                    앱이 실행되고 있을 시 broadcast 활성화
+//                    url : 해당 페이지로 이동
 
+                var url = intent.getStringExtra("url");
+//                webView.loadUrl(url)
+                webView.loadUrl(url)
+            }
+        }
+    }
+*/
 
+    @SuppressLint("JavascriptInterface")
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+//        //브로드캐스트 활성화
+//        val filter1 = IntentFilter("PUSH");
+//        registerReceiver(pushReceiver, filter1);
 
         val settings = webView.settings
 
@@ -48,6 +65,8 @@ class MainActivity : RootActivity() {
         }else {
             webView.loadUrl(url+getTokenId(this))
         }
+
+
         // Enable java script in web view
         settings.javaScriptEnabled = true
 
@@ -99,6 +118,15 @@ class MainActivity : RootActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // https 이미지.
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
+
+        webView.addJavascriptInterface(object : Any() {
+            @JavascriptInterface
+            fun performClick(url:String) {
+                Toast.makeText(this@MainActivity,url,Toast.LENGTH_SHORT).show()
+                // Deal with a click on the OK button
+            }
+        }, "ok")
+
         // WebView settings
         webView.fitsSystemWindows = true
 

@@ -101,11 +101,11 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         //앱 실행중일 시
         if (isAppRunning(this)) {
-            Intent broadcastIntent = new Intent("PUSH");
-            broadcastIntent.putExtra("url",url);
-            sendBroadcast(broadcastIntent);
+            System.out.println("앱실행중 " );
+//            Intent broadcastIntent = new Intent("PUSH");
+//            broadcastIntent.putExtra("url",url);
+//            sendBroadcast(broadcastIntent);
         }
-
         // 푸쉬 클릭 시 이벤트 설정
         intent = new Intent(this,MainActivity.class);
         intent.putExtra("url",url);
@@ -118,7 +118,7 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
          *  모든 (int)System.currentTimeMillis()/1000 는 푸쉬가 곂치기 않기 위해 설정
          * currentTime 으로 하면 푸쉬가 쌓임
          */
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,(int)System.currentTimeMillis()/1000,intent,PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,(int)System.currentTimeMillis()/1000,intent,PendingIntent.FLAG_UPDATE_CURRENT);
 //        Uri soundUri = Uri.parse("android.resuource://" + getPackageName() + "/" + R.raw.alram45);
 //        System.out.println("놉444444 " + soundUri);
 //        System.out.println("놉3333 " + getPackageName());
