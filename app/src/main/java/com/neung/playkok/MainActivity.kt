@@ -122,7 +122,7 @@ internal var pushReceiver: BroadcastReceiver? = object : BroadcastReceiver() {
         webView.addJavascriptInterface(object : Any() {
             @JavascriptInterface
             fun performClick(url:String) {
-                Toast.makeText(this@MainActivity,url,Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this@MainActivity,url,Toast.LENGTH_SHORT).show()
                 // Deal with a click on the OK button
             }
         }, "ok")
