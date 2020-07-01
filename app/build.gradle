@@ -8,10 +8,10 @@ android {
 
     defaultConfig {
         applicationId "com.neung.playkok"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 29
-        versionCode 8
-        versionName "1.2"
+        versionCode 10
+        versionName "1.31"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

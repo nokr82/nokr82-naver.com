@@ -66,7 +66,7 @@ internal var pushReceiver: BroadcastReceiver? = object : BroadcastReceiver() {
             webView.loadUrl(url+getTokenId(this))
         }
 
-
+        settings.setAllowFileAccess(false)
         // Enable java script in web view
         settings.javaScriptEnabled = true
 
@@ -156,13 +156,6 @@ internal var pushReceiver: BroadcastReceiver? = object : BroadcastReceiver() {
     private val FILECHOOSER_RESULTCODE = 1
 
     internal inner class MyWebChromeClient : WebChromeClient() {
-        override fun getDefaultVideoPoster(): Bitmap? {
-            val bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565)
-            val canvas = Canvas(bitmap)
-            // Use whatever color you want here. You could probably use a transparent color
-            canvas.drawARGB(255, 0, 0, 0)
-            return bitmap
-        }
 
         override fun onShowFileChooser(
             webView: WebView,
@@ -176,46 +169,6 @@ internal var pushReceiver: BroadcastReceiver? = object : BroadcastReceiver() {
                 Intent.createChooser(intent, "Image Browser"),
                 FILECHOOSER_RESULTCODE
             )
-            return true
-        }
-
-        override fun onCreateWindow(
-            view: WebView?,
-            isDialog: Boolean,
-            isUserGesture: Boolean,
-            resultMsg: Message?
-        ): Boolean {
-            val newWebView = WebView(this@MainActivity)
-            newWebView.settings.setJavaScriptEnabled(true);
-            newWebView.settings.setSupportZoom(true);
-            newWebView.settings.setBuiltInZoomControls(true);
-            newWebView.settings.setPluginState(WebSettings.PluginState.ON);
-            newWebView.settings.setSupportMultipleWindows(true);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // https 이미지.
-                newWebView.settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-            }
-            val dialog = Dialog(this@MainActivity)
-            dialog.setContentView(newWebView)
-
-            val params: ViewGroup.LayoutParams = dialog.getWindow()!!.getAttributes()
-            params.width = ViewGroup.LayoutParams.MATCH_PARENT
-            params.height = ViewGroup.LayoutParams.MATCH_PARENT
-            dialog.getWindow()!!.setAttributes(params as WindowManager.LayoutParams)
-            dialog.show()
-            newWebView.setWebChromeClient(object : WebChromeClient() {
-                override fun onCloseWindow(window: WebView) {
-                    dialog.dismiss()
-                }
-
-                override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
-                    Log.d("콘솔","${consoleMessage.message()}".trimIndent())
-                    return super.onConsoleMessage(consoleMessage)
-                }
-
-            })
-
-            (resultMsg!!.obj as WebViewTransport).webView = newWebView
-            resultMsg!!.sendToTarget()
             return true
         }
 
