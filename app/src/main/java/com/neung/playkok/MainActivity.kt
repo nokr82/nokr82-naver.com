@@ -2,20 +2,13 @@ package com.neung.playkok
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.*
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Message
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
 import android.webkit.*
-import android.webkit.WebView.WebViewTransport
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.google.android.gms.tasks.OnCompleteListener
@@ -122,8 +115,9 @@ internal var pushReceiver: BroadcastReceiver? = object : BroadcastReceiver() {
         webView.addJavascriptInterface(object : Any() {
             @JavascriptInterface
             fun performClick(url:String) {
-//                Toast.makeText(this@MainActivity,url,Toast.LENGTH_SHORT).show()
-                // Deal with a click on the OK button
+                var intent = Intent(this@MainActivity, ImageActivity::class.java)
+                intent.putExtra("url", url)
+                this@MainActivity.startActivity(intent)
             }
         }, "ok")
 
