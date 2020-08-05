@@ -1,15 +1,18 @@
 package com.neung.playkok
 
+import android.R.attr.scheme
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.*
+import android.content.ActivityNotFoundException
+import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.webkit.*
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
@@ -112,14 +115,14 @@ internal var pushReceiver: BroadcastReceiver? = object : BroadcastReceiver() {
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
 
-        webView.addJavascriptInterface(object : Any() {
-            @JavascriptInterface
-            fun performClick(url:String) {
-                var intent = Intent(this@MainActivity, ImageActivity::class.java)
-                intent.putExtra("url", url)
-                this@MainActivity.startActivity(intent)
-            }
-        }, "ok")
+//        webView.addJavascriptInterface(object : Any() {
+//            @JavascriptInterface
+//            fun performClick(url:String) {
+//                var intent = Intent(this@MainActivity, ImageActivity::class.java)
+//                intent.putExtra("url", url)
+//                this@MainActivity.startActivity(intent)
+//            }
+//        }, "ok")
 
         // WebView settings
         webView.fitsSystemWindows = true
@@ -134,6 +137,59 @@ internal var pushReceiver: BroadcastReceiver? = object : BroadcastReceiver() {
 
 //        // Set web view client
         webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                if (scheme != null && url!!.contains("kakao")) {
+                    val INTENT_PROTOCOL_START = "intent:"
+                    val INTENT_PROTOCOL_INTENT = "#Intent;"
+                    val INTENT_PROTOCOL_END = ";end;"
+                    return if (Build.VERSION.SDK_INT >= 19) {
+                        if (url!!.startsWith(INTENT_PROTOCOL_START)) {
+                            val customUrlStartIndex = INTENT_PROTOCOL_START.length
+                            val customUrlEndIndex = url!!.indexOf(INTENT_PROTOCOL_INTENT)
+                            if (customUrlEndIndex < 0) {
+                                false
+                            } else {
+                                val customUrl =
+                                    url!!.substring(customUrlStartIndex, customUrlEndIndex)
+                                val intent = Intent(Intent.ACTION_VIEW)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                try {
+                                    intent.data = Uri.parse(customUrl)
+                                    baseContext.startActivity(intent)
+                                } catch (e: ActivityNotFoundException) {
+                                    val packageStartIndex =
+                                        customUrlEndIndex + INTENT_PROTOCOL_INTENT.length
+                                    val packageEndIndex = url!!.indexOf(INTENT_PROTOCOL_END)
+                                    val packageName = url!!.substring(
+                                        packageStartIndex,
+                                        if (packageEndIndex < 0) url!!.length else packageEndIndex
+                                    )
+                                    //                                  intent.setData(Uri.parse(GOOGLE_PLAY_STORE_PREFIX   + packageName));
+                                    intent.data =
+                                        Uri.parse("https://play.google.com/store/apps/details?id=com.kakao.talk&hl=ko")
+                                    baseContext.startActivity(intent)
+                                }
+                                true
+                            }
+                        } else {
+                            false
+                        }
+                    } else {
+                        if (url!!.startsWith("intent:") || url!!.startsWith("kakaolink:") || url!!.startsWith(
+                                "market:"
+                            )
+                        ) {
+                            val intent =
+                                Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                            startActivity(intent)
+                        } else {
+                            view!!.loadUrl(url)
+                        }
+                        super.shouldOverrideUrlLoading(view, url)
+                    }
+                }
+                return false
+            }
 
         }
 
@@ -165,6 +221,7 @@ internal var pushReceiver: BroadcastReceiver? = object : BroadcastReceiver() {
             )
             return true
         }
+
 
         override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
             Log.d("콘솔","${consoleMessage.message()}".trimIndent())
