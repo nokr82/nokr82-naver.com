@@ -101,7 +101,7 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         //앱 실행중일 시
         if (isAppRunning(this)) {
-            System.out.println("앱실행중 " );
+//            System.out.println("앱실행중 " );
 //            Intent broadcastIntent = new Intent("PUSH");
 //            broadcastIntent.putExtra("url",url);
 //            sendBroadcast(broadcastIntent);

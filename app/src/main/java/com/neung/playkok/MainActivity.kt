@@ -58,8 +58,8 @@ internal var pushReceiver: BroadcastReceiver? = object : BroadcastReceiver() {
         if (intent.getStringExtra("url") != null && !intent.getStringExtra("url").equals("")) {
             //푸쉬클릭이벤트
             webView.loadUrl(intent.getStringExtra("url"))
-        }else {
-            webView.loadUrl(url+getTokenId(this))
+        } else {
+            webView.loadUrl(url + getTokenId(this))
         }
 
         settings.setAllowFileAccess(false)
@@ -86,8 +86,6 @@ internal var pushReceiver: BroadcastReceiver? = object : BroadcastReceiver() {
         settings.blockNetworkImage = false
         // Whether the WebView should load image resources
         settings.loadsImagesAutomatically = true
-
-
 
 
         // More web view settings
@@ -199,9 +197,6 @@ internal var pushReceiver: BroadcastReceiver? = object : BroadcastReceiver() {
     }
 
 
-
-
-
     private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
     private val FILECHOOSER_RESULTCODE = 1
 
@@ -214,6 +209,7 @@ internal var pushReceiver: BroadcastReceiver? = object : BroadcastReceiver() {
         ): Boolean {
             mFilePathCallback = filePathCallback
             val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             intent.type = "*/*"
             startActivityForResult(
                 Intent.createChooser(intent, "Image Browser"),
@@ -224,7 +220,7 @@ internal var pushReceiver: BroadcastReceiver? = object : BroadcastReceiver() {
 
 
         override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
-            Log.d("콘솔","${consoleMessage.message()}".trimIndent())
+//            Log.d("콘솔", "${consoleMessage.message()}".trimIndent())
             return super.onConsoleMessage(consoleMessage)
         }
     }
@@ -235,12 +231,21 @@ internal var pushReceiver: BroadcastReceiver? = object : BroadcastReceiver() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == FILECHOOSER_RESULTCODE) {
-            mFilePathCallback?.onReceiveValue(
-                WebChromeClient.FileChooserParams.parseResult(
-                    resultCode,
-                    data
-                )
-            )
+            var params: Array<Uri>? = null
+            if (data!!.clipData != null) { // handle multiple-selected files
+                val list = mutableListOf<Uri>()
+                val numSelectedFiles = data.clipData!!.itemCount
+                for (i in 0 until numSelectedFiles) {
+                    list.add(data.clipData!!.getItemAt(i).uri)
+                }
+                params = list.toTypedArray()
+            } else if (data!!.data != null) { // handle single-selected file
+                params = WebChromeClient.FileChooserParams.parseResult(resultCode, data)
+            } else {  // 이미지 없음 꺼져
+                return
+            }
+
+            mFilePathCallback?.onReceiveValue(params)
             mFilePathCallback = null
         }
     }
